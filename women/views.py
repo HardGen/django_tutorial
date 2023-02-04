@@ -1,10 +1,25 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
+from .models import *
 
+
+menu = ["О Сайте","Добавить Статью","Обратая Связь","Войти"]
 
 # Create your views here.
 def index(request):
-    return render(request, '')
+    posts = Women.objects.all()
+    return render(
+        request,
+        'women/index.html',
+        {
+            'posts': posts,
+            'menu': menu,
+            'title': 'Главная Страница'
+        }
+        )
+
+def about(request):
+    return render(request, 'women/about.html', {'menu': menu, 'title': 'О Сайте'})
 
 
 def categories(request, catid):
