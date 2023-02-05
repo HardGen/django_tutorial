@@ -2,37 +2,39 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from .models import *
 
-
-menu = ["О Сайте","Добавить Статью","Обратая Связь","Войти"]
-
+menu = [
+    {'title': "О Сайте", 'url_name': 'about'},
+    {'title': "Добавить Статью", 'url_name': 'add_page'},
+    {'title': "Обратая Связь", 'url_name': 'contact'},
+    {'title': "Войти", 'url_name': 'login'},
+]
 # Create your views here.
 def index(request):
     posts = Women.objects.all()
-    return render(
-        request,
-        'women/index.html',
-        {
-            'posts': posts,
-            'menu': menu,
-            'title': 'Главная Страница'
-        }
-        )
+    context = {
+        'posts': posts,
+        'menu': menu,
+        'title': 'Главная Страница'
+    }
+
+    return render(request,'women/index.html',context=context)
 
 def about(request):
     return render(request, 'women/about.html', {'menu': menu, 'title': 'О Сайте'})
 
 
-def categories(request, catid):
-    if (request.GET):
-        print(request.GET)
-    return HttpResponse(f"<h1>Статьи по категории</h1><p>{catid}</p>")
+def login(request):
+    return HttpResponse("Авторизация")
 
-def archive(request, year):
-    if int(year) > 2028:
-        return redirect('home', permanent=True)
+    
+def contact(request):
+    return HttpResponse("Обратная связь")
 
-    return HttpResponse(f"<h1>Статьи по категории</h1><p>{year}</p>")
+def addpage(request):
+    return HttpResponse("Добавление статьи")
 
+def show_post(response, post_id):
+    return HttpResponse(f"PST={post_id}")
 
 def pageNotFound(reques, exception):
     return HttpResponseNotFound('<h1>Страница не найдена</h1>')
